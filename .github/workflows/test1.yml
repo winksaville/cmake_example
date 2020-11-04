@@ -1,0 +1,51 @@
+name: GHA test1
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    name: Linux build and test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+
+      - name: Install CMake
+        run: if [ `builtin type -p cmake` ]; then echo cmake already installed; else sudo apt-get install cmake; fi
+
+      - name: Test that cmake works
+        shell: cmake -P {0}
+        run: message(STATUS "Start")
+
+      - name: Install Ninja
+        run: if [ `builtin type -p ninja` ]; then echo ninja already installed; else sudo apt-get install ninja-build; fi
+
+      - name: Install pytest
+        run: if [ `builtin type -p pytest` ]; then echo pytest already installed; else sudo apt-get install python-pytest; fi
+
+      - name: Test that pytest works
+        run: pytest --version
+
+     #- name: Install python3
+     #  run: if [ `builtin type -p python3` ]; then echo python3 already installed; else sudo apt-get install python3; fi
+
+     #- name: Install pytest
+     #  run: if [ `builtin type -p pytest` ]; then echo pytest already installed; else pip install -U pytest; fi
+
+      - name: Configure
+        run: cmake -S .  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G Ninja
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Run tests
+        run: |
+          pip install -e .
+          pytest tests
