@@ -43,7 +43,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-1
+          key: ${{ runner.os }}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-2
           restore-keys: |
             ${{ runner.os }}-python-
             ${{ runner.os }}-
@@ -57,6 +57,11 @@ jobs:
           pip --version
           pytest --version
           pip install -r requirements.txt
+          echo PATH=$PATH
+          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/p*
+          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/lib/python3.6/site-packages/p*
+          ls -al /opt/hostedtoolcache/Python/3.8.6/x64/bin/p*
+          ls -al /opt/hostedtoolcache/Python/3.8.6/x64/lib/python3.8/site-packages/p*
           which python
           which pytest
           which pip
@@ -64,9 +69,13 @@ jobs:
       - name: Test pytest
         run: |
           echo PATH=$PATH
-          which python
-          which pytest
-          which pip
+          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/p*
+          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/lib/python3.6/site-packages/p*
+          ls -al /opt/hostedtoolcache/Python/3.8.6/x64/bin/p*
+          ls -al /opt/hostedtoolcache/Python/3.8.6/x64/lib/python3.8/site-packages/p*
+          #which python
+          #which pytest
+          #which pip
           pytest --version
 
       - name: Configure
