@@ -79,12 +79,15 @@ jobs:
           echo "**** cache-pytest cache-hit was NOT true INSTALL ****"
           pip install pytest
           echo PATH=$PATH
-          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest || true
-          which pytest || true
+          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest
+          which pytest
 
       - name: Test pytest
         run: |
           echo PATH=$PATH
+          set +e
+          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest
+          which pytest
           pytest --version
 
       #- name: Configure
