@@ -1,6 +1,5 @@
 name: GHA test1
 
-
 on: [push, pull_request]
 
 env:
@@ -13,7 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.6, 3.8]
+        #python-version: [3.6, 3.8]
+        python-version: [3.6]
 
     steps:
       - uses: actions/checkout@v2
@@ -62,9 +62,6 @@ jobs:
           ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/python
           ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest
           ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pip
-          ls -al /opt/hostedtoolcache/Python/3.8.6/x64/bin/python
-          ls -al /opt/hostedtoolcache/Python/3.8.6/x64/bin/pytest
-          ls -al /opt/hostedtoolcache/Python/3.8.6/x64/bin/pip
           which python
           which pytest
           which pip
@@ -75,18 +72,15 @@ jobs:
           ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/python
           ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest
           ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pip
-          ls -al /opt/hostedtoolcache/Python/3.8.6/x64/bin/python
-          ls -al /opt/hostedtoolcache/Python/3.8.6/x64/bin/pytest
-          ls -al /opt/hostedtoolcache/Python/3.8.6/x64/bin/pip
           pytest --version
 
-      - name: Configure
-        run: cmake -S .  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G Ninja
+      #- name: Configure
+      #  run: cmake -S .  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G Ninja
 
-      - name: Build
-        run: cmake --build build
+      #- name: Build
+      #  run: cmake --build build
 
-      - name: Run tests
-        run: |
-          pip install -e .
-          python -m pytest tests
+      #- name: Run tests
+      #  run: |
+      #    pip install -e .
+      #    python -m pytest tests
