@@ -50,8 +50,6 @@ jobs:
 
       - name: Install python
         if: steps.cache.outputs.cache-hit != 'true'
-        #if: steps.cache-hit != 'true'
-        #if: cache-hit != 'true'
         run: |
           echo "**** cache was NOT true ****"
           python -m pip install --upgrade pip
