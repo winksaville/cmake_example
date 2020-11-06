@@ -43,7 +43,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-python-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-x
           restore-keys: |
             ${{ runner.os }}-python-
             ${{ runner.os }}-
@@ -59,9 +59,17 @@ jobs:
           pip --version
           pytest --version
           pip install -r requirements.txt
+          which python
+          which pytest
+          which pip
 
       - name: Test pytest
-        run: pytest --version
+        run: |
+          echo PATH=$PATH
+          which python
+          which pytest
+          which pip
+          pytest --version
 
       - name: Configure
         run: cmake -S .  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G Ninja
