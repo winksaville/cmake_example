@@ -45,7 +45,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-3
+          key: ${{ runner.os }}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-5
           restore-keys: |
             ${{ runner.os }}-python-
             ${{ runner.os }}-
@@ -53,26 +53,39 @@ jobs:
       - name: Install python
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          echo "**** cache-hit was NOT true INSTALL ****"
+          echo "**** cache cache-hit was NOT true INSTALL ****"
           python -m pip install --upgrade pip
-          pip install setuptools pytest
           pip --version
-          pytest --version
+          python --version
+          pip install setuptools
           pip install -r requirements.txt
           echo PATH=$PATH
           ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/python
-          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest
           ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pip
           which python
-          which pytest
           which pip
+
+      - name: Cache pytest
+        id: cache-pytest
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pytest
+          key: ${{ runner.os }}-pytest-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-5
+          restore-keys: |
+            ${{ runner.os }}-pytest-
+
+      - name: Install pytest
+        if: steps.cache-pytest.outputs.cache-hit != 'true'
+        run: |
+          echo "**** cache-pytest cache-hit was NOT true INSTALL ****"
+          pip install pytest
+          echo PATH=$PATH
+          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest || true
+          which pytest || true
 
       - name: Test pytest
         run: |
           echo PATH=$PATH
-          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/python
-          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest
-          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pip
           pytest --version
 
       #- name: Configure
