@@ -1,5 +1,5 @@
 name: GHA test1
-# Github Action test1-2
+# Github Action test1
 
 on: [push, pull_request]
 
@@ -40,15 +40,17 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      # Using env.pythonLocation allowed pytest to be properly cached, using
+      # ~/.cache/pip did not work for me. It works the first thime when there is
+      # no cache but the second time where `Install python` is not executed pytest
+      # is not found.
       # From: https://medium.com/ai2-blog/python-caching-in-github-actions-e9452698e98d
       - name: Cache Python
         id: cache
         uses: actions/cache@v2
         with:
-          #path: ~/.cache/pip
-          #key: ${{ runner.os }}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-1
           path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-${{ env.pythonLocation}}-python-${{ hashFiles('requirements.txt') }}-1
+          key: ${{ runner.os }}-${{ env.pythonLocation}}-python-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-python-
             ${{ runner.os }}-
@@ -56,31 +58,20 @@ jobs:
       - name: Install python
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          echo "**** cache cache-hit was NOT true INSTALL ****"
+          echo "cache-hit was NOT true, INSTALL"
           python -m pip install --upgrade --upgrade-strategy eager -r requirements.txt -e .
-          pip --version
-          python --version
-          echo PATH=$PATH
-          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/python
-          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pip
-          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest
-          which python
-          which pip
-          which pytest
 
       - name: Test pytest
         run: |
-          echo PATH=$PATH
-          which pytest
           pytest --version
 
-      #- name: Configure
-      #  run: cmake -S .  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G Ninja
+      - name: Configure
+        run: cmake -S .  -B build -D CMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G Ninja
 
-      #- name: Build
-      #  run: cmake --build build
+      - name: Build
+        run: cmake --build build
 
-      #- name: Run tests
-      #  run: |
-      #    pip install -e .
-      #    python -m pytest tests
+      - name: Run tests
+        run: |
+          pip install -e .
+          python -m pytest tests
