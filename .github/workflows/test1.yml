@@ -45,10 +45,10 @@ jobs:
         id: cache
         uses: actions/cache@v2
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-1
-          #path: ${{ env.pythonLocation }}
-          #key: ${{ runner.os }}-${{ env.pythonLocation}}-python-${{ hashFiles('requirements.txt') }}-1
+          #path: ~/.cache/pip
+          #key: ${{ runner.os }}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-1
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-${{ env.pythonLocation}}-python-${{ hashFiles('requirements.txt') }}-1
           restore-keys: |
             ${{ runner.os }}-python-
             ${{ runner.os }}-
