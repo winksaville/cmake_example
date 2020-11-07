@@ -1,5 +1,5 @@
 name: GHA test1
-
+# Github Action test1-1
 
 on: [push, pull_request]
 
@@ -45,8 +45,10 @@ jobs:
         id: cache
         uses: actions/cache@v2
         with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-${{ env.pythonLocation}}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-5
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-1
+          #path: ${{ env.pythonLocation }}
+          #key: ${{ runner.os }}-${{ env.pythonLocation}}-python-${{ hashFiles('requirements.txt') }}-1
           restore-keys: |
             ${{ runner.os }}-python-
             ${{ runner.os }}-
