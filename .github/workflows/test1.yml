@@ -39,12 +39,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      # From: https://medium.com/ai2-blog/python-caching-in-github-actions-e9452698e98d
       - name: Cache Python
         id: cache
         uses: actions/cache@v2
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-5
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-${{ env.pythonLocation}}-python-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-5
           restore-keys: |
             ${{ runner.os }}-python-
             ${{ runner.os }}-
@@ -53,40 +54,20 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           echo "**** cache cache-hit was NOT true INSTALL ****"
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade --upgrade-strategy eager -r requirements.txt -e .
           pip --version
           python --version
-          pip install setuptools
-          pip install -r requirements.txt
           echo PATH=$PATH
           ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/python
           ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pip
+          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest
           which python
           which pip
-
-      - name: Cache pytest
-        id: cache-pytest
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pytest
-          key: ${{ runner.os }}-pytest-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}-5
-          restore-keys: |
-            ${{ runner.os }}-pytest-
-
-      - name: Install pytest
-        if: steps.cache-pytest.outputs.cache-hit != 'true'
-        run: |
-          echo "**** cache-pytest cache-hit was NOT true INSTALL ****"
-          pip install pytest
-          echo PATH=$PATH
-          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest
           which pytest
 
       - name: Test pytest
         run: |
           echo PATH=$PATH
-          set +e
-          ls -al /opt/hostedtoolcache/Python/3.6.12/x64/bin/pytest
           which pytest
           pytest --version
 
