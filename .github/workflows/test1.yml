@@ -1,7 +1,7 @@
 name: GHA test1
 # Github Action test1 2
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 env:
   BUILD_TYPE: Release
