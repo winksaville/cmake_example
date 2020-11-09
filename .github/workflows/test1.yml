@@ -50,10 +50,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-${{ env.pythonLocation}}-python-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-python-${{ env.pythonLocation}}-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-python-
-            ${{ runner.os }}-
 
       - name: Install python
         if: steps.cache.outputs.cache-hit != 'true'
